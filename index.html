@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AHGASE</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        input{
+            width: 80%;
+            border-radius: 5px;
+            align-items: center;
+            border-color:  hsl(120, 67%, 82%);
+        }
+
+        .bf{
+            width: 5%;
+            background-color: rgb(150, 132, 105);
+            border-radius: 20px ;
+            border-color: rgb(150, 132, 105);
+        }
+        .for{
+            margin: 25px;
+            width: 95%;
+            height: 89%;
+        }
+        .msg{
+            position: absolute;
+            right: 0px;
+            padding: 10px;
+            height: 100%;
+            width: 70%;
+            background-color: rgb(178, 240, 178);
+        }
+        .user{
+            position: absolute;
+            left: 0px;
+            padding: 10px;
+            width: 30%;
+            height: 100%;
+            background-color: rgb(75, 163, 125);
+        }
+        .lista{
+            position:static;
+            margin: 25px;
+            width: 90%;
+            height: 89%;
+            background-color: rgb(230, 243, 237);
+            border-radius: 5px;
+            overflow-y: scroll;
+        }
+        .lista-progress-bar{
+            height: 8px;
+            background: #04AA6D;
+            width: 0%;
+        }
+
+        .ulis{
+            background-color: bisque;
+            list-style: none;            
+        }
+        .users{
+            background-color: azure;
+            width: 80%;
+            height: 50px;
+            margin: 5px;
+            border-radius: 2px;
+            border-color: azure;
+        }
+    </style>
+</head>
+<body>
+    <div class="user">
+        <h2><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+            <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+          </svg> USUARIOS</h2>
+          <div >
+            <ul id="button-user">
+            </button>
+            <button class="users" type="file"> Team
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                  </svg>
+            </button>
+            </ul>
+          </div>
+    </div>
+    <div class="msg">
+        <div class="lista">
+                <ul id="message_list" class="ulis"></ul>
+        </div>
+        <form id="message_area" action="">
+            <div class="for">
+                <input id="text_area" autocomplete="off" />
+                <button class="bf" id="file_button" tyoe="file" >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-archive" viewBox="0 0 16 16">
+                        <path d="M0 2a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1v7.5a2.5 2.5 0 0 1-2.5 2.5h-9A2.5 2.5 0 0 1 1 12.5V5a1 1 0 0 1-1-1V2zm2 3v7.5A1.5 1.5 0 0 0 3.5 14h9a1.5 1.5 0 0 0 1.5-1.5V5H2zm13-3H1v2h14V2zM5 7.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                      </svg>
+                </button>
+                 <button class="bf">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                    </svg>
+                </button>
+
+            </div>
+        
+    </form>
+    </div>
+
+
+<script>
+
+    
+    //let nameusers=[];
+   const socket = io();
+
+   //input
+   const messageForm = document.getElementById('message_area');
+    const textInput = document.getElementById('text_area');
+    //textInput.value = '';
+    //fileButton.value = '';
+
+
+    username = window.prompt("Ingrese su Usuario:");
+    socket.emit('new user', username);
+
+    messageForm.addEventListener('submit', function(e) {
+     e.preventDefault();
+        if (textInput.value) {socket.emit('new user', textInput.value);
+            textInput.value = '';
+        } });
+
+    socket.on('send user', (data) => {
+     //for(let i=0; i<username.length; i++){
+        const cbu = document.getElementById('button-user')
+        const button = document.createElement('button');
+        //button.type='button';
+        button.textContent= data.user;
+        cbu.appendChild(button)
+     //}
+    });
+    //global
+    messageForm.addEventListener('submit', function(e) {
+     e.preventDefault();
+        if (textInput.value) {socket.emit('new message', textInput.value);
+            textInput.value = '';
+        }
+    });
+
+    
+    socket.on('send message', (data) => {
+        const messageList = document.getElementById('message_list');
+        const chatItem = document.createElement('li');
+        chatItem.textContent = data.user + ': ' + data.message;
+        messageList.appendChild(chatItem);
+        window.scrollTo(0, document.body.scrollHeight);
+    }); 
+    //privado
+
+    messageForm.addEventListener('submit', function(e) {
+     e.preventDefault();
+        if (textInput.value) {socket.emit('new message private', textInput.value);
+            textInput.value = '';
+     }});
+
+    socket.on('send message private', (data) => {
+        const id= data.id;
+            const messageList = document.getElementById('message_list');
+            const chatItem = document.createElement('li');
+            chatItem.textContent = data.user + ': ' + data.message;
+            messageList.appendChild(chatItem);
+            window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    //archivos
+    
+
+</script>
+
+</body>
+
+</html>
